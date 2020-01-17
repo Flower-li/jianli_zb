@@ -5,6 +5,7 @@ import store from "./store";
 import axios from "axios";
 import Vant from "vant";
 import "vant/lib/index.css";
+import "vant/lib/icon/local.css";
 
 Vue.use(Vant);
 Vue.prototype.$axios = axios;

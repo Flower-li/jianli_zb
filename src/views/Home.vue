@@ -18,7 +18,7 @@
           <span>*</span>
         </van-col>
         <van-col :span="24">
-          <van-radio-group v-model="list.radio" @change="radioChange">
+          <van-radio-group v-model="list.xb" @change="radioChange">
             <van-radio name="男">男</van-radio>
             <van-radio name="女">女</van-radio>
           </van-radio-group>
@@ -31,7 +31,11 @@
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field v-model="list.nn" placeholder="请填写年龄" />
+            <van-field
+              v-model="list.nn"
+              placeholder="请填写年龄"
+              type="number"
+            />
           </van-cell-group>
         </van-col>
       </van-row>
@@ -42,7 +46,11 @@
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field v-model="list.sjh" placeholder="请填写手机号" />
+            <van-field
+              v-model="list.sjh"
+              placeholder="请填写手机号"
+              type="number"
+            />
           </van-cell-group>
         </van-col>
       </van-row>
@@ -66,7 +74,7 @@
           <van-cell-group>
             <van-field
               v-model="list.csrq"
-              placeholder="请填写出生年份,格式参照：XXXX-XX-XX"
+              placeholder="请填写出生年份,格式必须为：XXXX-XX-XX"
             />
           </van-cell-group>
         </van-col>
@@ -163,7 +171,10 @@
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field v-model="list.bysj" placeholder="请填写毕业时间" />
+            <van-field
+              v-model="list.bysj"
+              placeholder="请填写毕业时间，格式必须为：XXXX-XX-XX"
+            />
           </van-cell-group>
         </van-col>
       </van-row>
@@ -184,7 +195,10 @@
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field v-model="list.rtsj" placeholder="请填写入团时间" />
+            <van-field
+              v-model="list.rtsj"
+              placeholder="请填写入团时间，格式必须为：XXXX-XX-XX"
+            />
           </van-cell-group>
         </van-col>
       </van-row>
@@ -194,7 +208,10 @@
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field v-model="list.rdsj" placeholder="请填写入党时间" />
+            <van-field
+              v-model="list.rdsj"
+              placeholder="请填写入党时间，格式必须为：XXXX-XX-XX"
+            />
           </van-cell-group>
         </van-col>
       </van-row>
@@ -204,7 +221,10 @@
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field v-model="list.rwsj" placeholder="请填写入伍时间" />
+            <van-field
+              v-model="list.rwsj"
+              placeholder="请填写入伍时间，格式必须为：XXXX-XX-XX"
+            />
           </van-cell-group>
         </van-col>
       </van-row>
@@ -214,7 +234,10 @@
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field v-model="list.twsj" placeholder="请填写退伍时间" />
+            <van-field
+              v-model="list.twsj"
+              placeholder="请填写退伍时间，格式必须为：XXXX-XX-XX"
+            />
           </van-cell-group>
         </van-col>
       </van-row>
@@ -269,14 +292,14 @@
           </van-cell-group>
         </van-col>
       </van-row>
-      <van-row>
+      <!-- <van-row>
         <van-col :span="24">
           <p>证件上传</p>
         </van-col>
         <van-col :span="24">
-          <van-uploader v-model="fileList" multiple />
+          <van-uploader v-model="fileList" multiple :after-read="afterRead" />
         </van-col>
-      </van-row>
+      </van-row> -->
       <van-row>
         <van-col :span="24">
           <p>备注</p>
@@ -306,8 +329,7 @@ export default {
     return {
       list: {
         xm: "",
-        xb: "",
-        radio: "男",
+        xb: "男",
         nn: "",
         sjh: "",
         sfz: "",
@@ -342,8 +364,12 @@ export default {
     };
   },
   methods: {
+    afterRead(file) {
+      // 此时可以自行将文件上传至服务器
+      console.log(file);
+    },
     radioChange() {
-      console.log(this.list.radio);
+      console.log(this.list.xb);
     },
     tj() {
       if (
@@ -371,9 +397,45 @@ export default {
           alert("请填写正确手机号");
         } else if (this.list.sfz.length != 18) {
           alert("请填写正确身份证");
-          console.log(this.list.sfz.length);
         } else {
-          alert("提交成功");
+          let list = {
+            p_xm: this.list.xm,
+            p_xb: this.list.xb,
+            p_nn: this.list.nn,
+            p_sjh: this.list.sjh,
+            p_sfz: this.list.sfz,
+            p_csrq: this.list.csrq,
+            p_sg: this.list.sg,
+            p_tz: this.list.tz,
+            p_zysl: this.list.zysl,
+            p_yysl: this.list.yysl,
+            p_mz: this.list.mz,
+            p_xl: this.list.xl,
+            p_xz: this.list.xz,
+            p_zy: this.list.zy,
+            p_byyx: this.list.byyx,
+            p_bysj: this.list.bysj,
+            p_jg: this.list.jg,
+            p_rtsj: this.list.rtsj,
+            p_rdsj: this.list.rdsj,
+            p_rwsj: this.list.rwsj,
+            p_twsj: this.list.twsj,
+            p_xjttxdz: this.list.xjttxdz,
+            p_ypgw: this.list.ypgw,
+            p_qwmsdd: this.list.qwmsdd,
+            p_gzll: this.list.gzll,
+            p_bz: this.list.bz
+          };
+          let test = { list: list, is_manager: "0" };
+          this.$axios
+            .post("https://ehr.fjsg.com.cn/mzpy/manager/resume", test)
+            .then(rsp => {
+              if (rsp.data.p_message.includes("ORA")) {
+                alert("日期填写错误，请重新填写");
+              } else if (rsp.data.p_message == "调用成功") {
+                alert("提交成功");
+              }
+            });
         }
       } else {
         alert("提交失败，请填写所有必填选项");
