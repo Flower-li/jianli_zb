@@ -428,12 +428,13 @@ export default {
           };
           let test = { list: list, is_manager: "0" };
           this.$axios
-            .post("https://ehr.fjsg.com.cn/mzpy/manager/resume", test)
+            .post("https://ehr.fjsg.com.cn/uat/zp/manager/resume", test)
             .then(rsp => {
               if (rsp.data.p_message.includes("ORA")) {
                 alert("日期填写错误，请重新填写");
               } else if (rsp.data.p_message == "调用成功") {
                 alert("提交成功");
+                this.$router.push("/");
               }
             });
         }
