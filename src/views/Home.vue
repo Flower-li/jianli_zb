@@ -18,7 +18,7 @@
           <span>*</span>
         </van-col>
         <van-col :span="24">
-          <van-radio-group v-model="list.xb" @change="radioChange">
+          <van-radio-group v-model="list.xb">
             <van-radio name="男">男</van-radio>
             <van-radio name="女">女</van-radio>
           </van-radio-group>
@@ -292,14 +292,14 @@
           </van-cell-group>
         </van-col>
       </van-row>
-      <!-- <van-row>
+      <van-row>
         <van-col :span="24">
           <p>证件上传</p>
         </van-col>
         <van-col :span="24">
-          <van-uploader v-model="fileList" multiple :after-read="afterRead" />
+          <van-uploader v-model="fileList" multiple />
         </van-col>
-      </van-row> -->
+      </van-row>
       <van-row>
         <van-col :span="24">
           <p>备注</p>
@@ -355,22 +355,18 @@ export default {
         gzll: "",
         bz: ""
       },
-      fileList: [
-        // { url: "https://img.yzcdn.cn/vant/leaf.jpg", isImage: true },
-        // // Uploader 根据文件后缀来判断是否为图片文件
-        // // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-        // { url: "https://cloud-image", isImage: true }
-      ]
+      fileList: []
     };
   },
   methods: {
-    afterRead(file) {
-      // 此时可以自行将文件上传至服务器
-      console.log(file);
-    },
-    radioChange() {
-      console.log(this.list.xb);
-    },
+    // afterRead(file) {
+    //   // 此时可以自行将文件上传至服务器
+    //   let content=file.file;
+    //   let data=new FormData();
+    //   data.append('img',content);
+    //   // console.log(data.getAll("img"))
+    //   console.log(this.fileList[0].file)
+    // },
     tj() {
       if (
         this.list.xm != "" &&
@@ -433,8 +429,47 @@ export default {
               if (rsp.data.p_message.includes("ORA")) {
                 alert("日期填写错误，请重新填写");
               } else if (rsp.data.p_message == "调用成功") {
-                alert("提交成功");
-                this.$router.push("/");
+                if (this.fileList.length == 0) {
+                  alert("提交成功");
+                  this.$router.push("/");
+                } else {
+                  var formdata = new FormData();
+                  let a = "0";
+                  let b = "";
+                  console.log(this.fileList, "fileLIst");
+                  for (let item of this.fileList) {
+                    a++;
+                    b = item.content.substring(
+                      item.content.indexOf("/") + 1,
+                      item.content.indexOf(";")
+                    );
+                    if (b == "jpeg") {
+                      b = "jpg";
+                    }
+                    formdata.append(
+                      "uploadFiles",
+                      item.file,
+                      this.list.xm + "_" + a + "_" + this.list.sfz + "." + b
+                    );
+                  }
+                  console.log(formdata.getAll("uploadFiles"), "上传内容");
+                  this.$axios({
+                    method: "post",
+                    url: "https://ehr.fjsg.com.cn/uat/zp/multipleImageUpload",
+                    data: formdata,
+                    processData: false,
+                    contentType: false
+                  })
+                    .then(rsp => {
+                      alert("提交成功");
+                      this.$router.push("/");
+                      console.log(rsp, "返回数据");
+                    })
+                    .catch(err => {
+                      alert("提交失败");
+                      console.log(err, "返回报错");
+                    });
+                }
               }
             });
         }
