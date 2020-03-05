@@ -322,38 +322,38 @@
 
 <script>
 // @ is an alias to /src
-
+import { sendMsg, sendImg } from "@/api/mainData.js";
 export default {
   name: "home",
   data() {
     return {
       list: {
-        xm: "",
+        xm: "李凤化",
         xb: "男",
-        nn: "",
-        sjh: "",
-        sfz: "",
-        csrq: "",
-        sg: "",
-        tz: "",
-        zysl: "",
-        yysl: "",
-        mz: "",
-        xl: "",
-        xz: "",
-        zy: "",
-        byyx: "",
-        bysj: "",
-        jg: "",
-        rtsj: "",
-        rdsj: "",
-        rwsj: "",
-        twsj: "",
-        xjttxdz: "",
-        ypgw: "",
-        qwmsdd: "",
-        gzll: "",
-        bz: ""
+        nn: "1",
+        sjh: "13906988092",
+        sfz: "350425199110112911",
+        csrq: "1990-11-11",
+        sg: "1",
+        tz: "1",
+        zysl: "1",
+        yysl: "1",
+        mz: "1",
+        xl: "1",
+        xz: "1",
+        zy: "1",
+        byyx: "1",
+        bysj: "1990-11-11",
+        jg: "1",
+        rtsj: "1990-11-11",
+        rdsj: "1990-11-11",
+        rwsj: "1990-11-11",
+        twsj: "1990-11-11",
+        xjttxdz: "1",
+        ypgw: "1",
+        qwmsdd: "1",
+        gzll: "1",
+        bz: "1"
       },
       fileList: []
     };
@@ -367,6 +367,18 @@ export default {
     //   // console.log(data.getAll("img"))
     //   console.log(this.fileList[0].file)
     // },
+    dataURLtoFile(dataurl, filename) {
+      // 将base64转换为file文件
+      let arr = dataurl.split(",");
+      let mime = arr[0].match(/:(.*?);/)[1];
+      let bstr = atob(arr[1]);
+      let n = bstr.length;
+      let u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
     tj() {
       if (
         this.list.xm != "" &&
@@ -423,55 +435,88 @@ export default {
             p_bz: this.list.bz
           };
           let test = { list: list, is_manager: "0" };
-          this.$axios
-            .post("https://ehr.fjsg.com.cn/uat/zp/manager/resume", test)
-            .then(rsp => {
-              if (rsp.data.p_message.includes("ORA")) {
-                alert("日期填写错误，请重新填写");
-              } else if (rsp.data.p_message == "调用成功") {
-                if (this.fileList.length == 0) {
-                  alert("提交成功");
-                  this.$router.push("/");
-                } else {
-                  var formdata = new FormData();
-                  let a = "0";
-                  let b = "";
-                  console.log(this.fileList, "fileLIst");
-                  for (let item of this.fileList) {
-                    a++;
-                    b = item.content.substring(
-                      item.content.indexOf("/") + 1,
-                      item.content.indexOf(";")
-                    );
-                    if (b == "jpeg") {
-                      b = "jpg";
+          sendMsg(test).then(rsp => {
+            if (rsp.data.p_message.includes("ORA")) {
+              alert("日期填写错误，请重新填写");
+            } else if (rsp.data.p_message == "调用成功") {
+              if (this.fileList.length == 0) {
+                alert("提交成功");
+                this.$router.push("/");
+              } else {
+                var formdata = new FormData();
+                let a = "0";
+                let b = "";
+                console.log(this.fileList, "fileLIst");
+                for (let item of this.fileList) {
+                  a++;
+                  b = item.content.substring(
+                    item.content.indexOf("/") + 1,
+                    item.content.indexOf(";")
+                  );
+                  if (b == "jpeg") {
+                    b = "jpg";
+                  }
+                  console.log(item.file.size, "原图尺寸");
+                  if (item.file.size > 1048576) {
+                    let canvas = document.createElement("canvas"); // 创建Canvas对象(画布)
+                    let context = canvas.getContext("2d");
+                    let img = new Image();
+                    img.src = item.content; // 指定图片的DataURL(图片的base64编码数据)
+                    console.log(img.width, "图片宽度", img.height, "图片高度");
+                    var imgWidth = parseInt(img.width / 2);
+                    var imgHight = parseInt(img.height / 2);
+                    if (imgWidth > 1500 || imgHight > 1500) {
+                      (imgWidth = imgWidth / 2), (imgHight = imgHight / 2);
                     }
+                    console.log(
+                      imgWidth,
+                      "压缩后图片宽度",
+                      imgHight,
+                      "压缩后图片高度"
+                    );
+                    canvas.width = imgWidth;
+                    canvas.height = imgHight;
+                    context.drawImage(img, 0, 0, imgWidth, imgHight);
+                    item.content = canvas.toDataURL(item.file.type, 0.95);
+                    var files = this.dataURLtoFile(
+                      item.content,
+                      item.file.name
+                    );
+                    formdata.append(
+                      "uploadFiles",
+                      files,
+                      this.list.xm + "_" + a + "_" + this.list.sfz + "." + b
+                    );
+                  }
+                  if (item.file.size <= 1048576) {
                     formdata.append(
                       "uploadFiles",
                       item.file,
                       this.list.xm + "_" + a + "_" + this.list.sfz + "." + b
                     );
                   }
-                  console.log(formdata.getAll("uploadFiles"), "上传内容");
-                  this.$axios({
-                    method: "post",
-                    url: "https://ehr.fjsg.com.cn/uat/zp/multipleImageUpload",
-                    data: formdata,
-                    processData: false,
-                    contentType: false
-                  })
-                    .then(rsp => {
-                      alert("提交成功");
-                      this.$router.push("/");
-                      console.log(rsp, "返回数据");
-                    })
-                    .catch(err => {
-                      alert("提交失败");
-                      console.log(err, "返回报错");
-                    });
                 }
+                console.log(formdata.getAll("uploadFiles"), "总上传内容");
+                // this.$axios({
+                //   method: "post",
+                //   url: "https://ehr.fjsg.com.cn/uat/zp/multipleImageUpload",
+                //   data: formdata,
+                //   processData: false,
+                //   contentType: false
+                // })
+                sendImg(formdata)
+                  .then(rsp => {
+                    alert("提交成功");
+                    this.$router.push("/");
+                    console.log(rsp, "返回数据");
+                  })
+                  .catch(err => {
+                    alert("提交失败");
+                    console.log(err, "返回报错");
+                  });
               }
-            });
+            }
+          });
         }
       } else {
         alert("提交失败，请填写所有必填选项");

@@ -1,9 +1,22 @@
 <template>
   <div id="app">
     <router-view />
+    <loading v-show="LOADING"></loading>
   </div>
 </template>
-
+<script>
+import { mapState } from "vuex";
+import Loading from "./components/loading.vue";
+export default {
+  computed: {
+    ...mapState(["LOADING"])
+  },
+  name: "App",
+  components: {
+    Loading
+  }
+};
+</script>
 <style lang="scss">
 #app {
   margin: 0;
