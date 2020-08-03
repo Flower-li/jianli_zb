@@ -3,12 +3,73 @@
     <div class="bmxxMain">
       <van-row>
         <van-col :span="24">
+          <p>报名编号</p>
+          <span>*</span>
+        </van-col>
+        <van-col :span="24">
+          <van-cell-group>
+            <van-field v-model="list.sg" placeholder="请填写报名编号" />
+          </van-cell-group>
+        </van-col>
+      </van-row>
+      <van-row>
+        <van-col :span="24">
           <p>姓名</p>
           <span>*</span>
         </van-col>
         <van-col :span="24">
           <van-cell-group>
             <van-field v-model="list.xm" placeholder="请填写姓名" />
+          </van-cell-group>
+        </van-col>
+      </van-row>
+        <van-row>
+        <van-col :span="24">
+          <p>手机号码</p>
+          <span>*</span>
+        </van-col>
+        <van-col :span="24">
+          <van-cell-group>
+            <van-field
+              v-model="list.sjh"
+              placeholder="请填写手机号码"
+              type="number"
+            />
+          </van-cell-group>
+        </van-col>
+      </van-row>
+      <van-row>
+        <van-col :span="24">
+          <p>身份证号码</p>
+          <span>*</span>
+        </van-col>
+        <van-col :span="24">
+          <van-cell-group>
+            <van-field v-model="list.sfz" placeholder="请填写身份证号码" />
+          </van-cell-group>
+        </van-col>
+      </van-row>
+            <van-row>
+        <van-col :span="24">
+          <p>曾用名</p>
+        </van-col>
+        <van-col :span="24">
+          <van-cell-group>
+            <van-field
+              v-model="list.gzll"
+              placeholder="请填写曾用名"
+            />
+          </van-cell-group>
+        </van-col>
+      </van-row>
+      <van-row>
+        <van-col :span="24">
+          <p>出生地</p>
+          <span>*</span>
+        </van-col>
+        <van-col :span="24">
+          <van-cell-group>
+            <van-field v-model="list.qwmsdd" placeholder="请填写出生地" />
           </van-cell-group>
         </van-col>
       </van-row>
@@ -26,126 +87,73 @@
       </van-row>
       <van-row>
         <van-col :span="24">
-          <p>年龄</p>
-          <span>*</span>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field
-              v-model="list.nn"
-              placeholder="请填写年龄"
-              type="number"
-            />
-          </van-cell-group>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col :span="24">
-          <p>手机号</p>
-          <span>*</span>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field
-              v-model="list.sjh"
-              placeholder="请填写手机号"
-              type="number"
-            />
-          </van-cell-group>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col :span="24">
-          <p>身份证</p>
-          <span>*</span>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.sfz" placeholder="请填写身份证" />
-          </van-cell-group>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col :span="24">
           <p>出生日期</p>
           <span>*</span>
         </van-col>
         <van-col :span="24">
           <van-cell-group>
             <van-field
+              @click="showCs"
               v-model="list.csrq"
-              placeholder="请填写出生年份,格式必须为：XXXX-XX-XX"
+              placeholder="请选择出生日期"
+              readonly
             />
           </van-cell-group>
         </van-col>
       </van-row>
-      <van-row>
-        <van-col :span="24">
-          <p>身高体重</p>
-          <span>*</span>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.sg" placeholder="请填写身高，单位cm" />
-          </van-cell-group>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.tz" placeholder="请填写体重，单位kg" />
-          </van-cell-group>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col :span="24">
-          <p>左右眼视力</p>
-          <span>*</span>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.zysl" placeholder="请填写左眼视力" />
-          </van-cell-group>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.yysl" placeholder="请填写右眼视力" />
-          </van-cell-group>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col :span="24">
-          <p>民族</p>
-          <span>*</span>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.mz" placeholder="请填写民族" />
-          </van-cell-group>
-        </van-col>
-      </van-row>
+      <van-popup
+        v-model="showCsrq"
+        position="bottom"
+        :style="{ height: '40%' }"
+      >
+        <van-datetime-picker
+          v-model="currentDate"
+          type="date"
+          title="选择出生日期"
+          :min-date="minDate"
+          :max-date="maxDate"
+          :formatter="formatter"
+          @confirm="choiceCsrq"
+          @cancel="cancelCsrq"
+        />
+      </van-popup>
       <van-row>
         <van-col :span="24">
           <p>学历</p>
           <span>*</span>
         </van-col>
         <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.xl" placeholder="请填写学历" />
-          </van-cell-group>
+          <van-dropdown-menu>
+            <van-dropdown-item v-model="list.xl" :options="option3" />
+        </van-dropdown-menu>
         </van-col>
       </van-row>
       <van-row>
         <van-col :span="24">
-          <p>学制</p>
+          <p>学历类型</p>
+          <span>*</span>
         </van-col>
         <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.xz" placeholder="请填写学制" />
-          </van-cell-group>
+          <van-dropdown-menu>
+            <van-dropdown-item v-model="list.tz" :options="option1" />
+        </van-dropdown-menu>
         </van-col>
       </van-row>
       <van-row>
         <van-col :span="24">
-          <p>专业</p>
+          <p>学位</p>
+          <span>*</span>
+        </van-col>
+        <van-col :span="24">
+          <van-dropdown-menu>
+            <van-dropdown-item v-model="list.ypgw" :options="option2" />
+          </van-dropdown-menu>
+        </van-col>
+      </van-row>
+      <van-row>
+        <van-col :span="24">
+          <p>毕业专业</p>
+          <span>*</span>
         </van-col>
         <van-col :span="24">
           <van-cell-group>
@@ -172,12 +180,30 @@
         <van-col :span="24">
           <van-cell-group>
             <van-field
+              @click="showBy"
               v-model="list.bysj"
-              placeholder="请填写毕业时间，格式必须为：XXXX-XX-XX"
+              placeholder="请选择毕业年月份"
+              readonly
             />
           </van-cell-group>
         </van-col>
       </van-row>
+      <van-popup
+        v-model="showBysj"
+        position="bottom"
+        :style="{ height: '40%' }"
+      >
+        <van-datetime-picker
+          v-model="currentDate"
+          type="year-month"
+          title="选择年月"
+          :min-date="minDate"
+          :max-date="maxDate"
+          :formatter="formatter"
+          @confirm="choiceBysj"
+          @cancel="cancelBysj"
+        />
+      </van-popup>
       <van-row>
         <van-col :span="24">
           <p>籍贯</p>
@@ -191,30 +217,28 @@
       </van-row>
       <van-row>
         <van-col :span="24">
-          <p>入团时间</p>
+          <p>民族</p>
+          <span>*</span>
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field
-              v-model="list.rtsj"
-              placeholder="请填写入团时间，格式必须为：XXXX-XX-XX"
-            />
+            <van-field v-model="list.mz" placeholder="请填写民族" />
           </van-cell-group>
         </van-col>
       </van-row>
+
       <van-row>
         <van-col :span="24">
-          <p>入党时间</p>
+          <p>政治面貌</p>
+          <span>*</span>
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field
-              v-model="list.rdsj"
-              placeholder="请填写入党时间，格式必须为：XXXX-XX-XX"
-            />
+            <van-field v-model="list.nn" placeholder="请填写政治面貌" />
           </van-cell-group>
         </van-col>
       </van-row>
+
       <van-row>
         <van-col :span="24">
           <p>入伍时间</p>
@@ -222,12 +246,31 @@
         <van-col :span="24">
           <van-cell-group>
             <van-field
+              @click="showRw"
               v-model="list.rwsj"
-              placeholder="请填写入伍时间，格式必须为：XXXX-XX-XX"
+              placeholder="请选择入伍时间，非军人请勿选择"
+              readonly
             />
           </van-cell-group>
         </van-col>
       </van-row>
+      <van-popup
+        v-model="showRwsj"
+        position="bottom"
+        :style="{ height: '40%' }"
+      >
+        <van-datetime-picker
+          v-model="currentDate"
+          type="year-month"
+          title="选择年月"
+          :min-date="minDate"
+          :max-date="maxDate"
+          :formatter="formatter"
+          @confirm="choiceRwsj"
+          @cancel="cancelRwsj"
+          cancel-button-text="清除时间"
+        />
+      </van-popup>
       <van-row>
         <van-col :span="24">
           <p>退伍时间</p>
@@ -235,69 +278,52 @@
         <van-col :span="24">
           <van-cell-group>
             <van-field
+              @click="showTw"
               v-model="list.twsj"
-              placeholder="请填写退伍时间，格式必须为：XXXX-XX-XX"
+              placeholder="请选择退伍时间，非军人请勿选择"
+              readonly
             />
           </van-cell-group>
         </van-col>
       </van-row>
+      <van-popup
+        v-model="showTwsj"
+        position="bottom"
+        :style="{ height: '40%' }"
+      >
+        <van-datetime-picker
+          v-model="currentDate"
+          type="year-month"
+          title="选择年月"
+          :min-date="minDate"
+          :max-date="maxDate"
+          :formatter="formatter"
+          @confirm="choiceTwsj"
+          @cancel="cancelTwsj"
+          cancel-button-text="清除时间"
+        />
+      </van-popup>
       <van-row>
         <van-col :span="24">
-          <p>现家庭通讯地址</p>
+          <p>是否三钢子女或配偶</p>
+          <span>*</span>
+        </van-col>
+        <van-col :span="24">
+          <van-radio-group v-model="list.xz">
+            <van-radio name="是">是</van-radio>
+            <van-radio name="否">否</van-radio>
+          </van-radio-group>
+        </van-col>
+      </van-row>
+      <van-row>
+        <van-col :span="24">
+          <p>家庭住址</p>
           <span>*</span>
         </van-col>
         <van-col :span="24">
           <van-cell-group>
-            <van-field
-              v-model="list.xjttxdz"
-              placeholder="请填写现家庭通讯地址"
-            />
+            <van-field v-model="list.xjttxdz" placeholder="请填写家庭住址" />
           </van-cell-group>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col :span="24">
-          <p>应聘岗位</p>
-          <span>*</span>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.ypgw" placeholder="请填写应聘岗位" />
-          </van-cell-group>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col :span="24">
-          <p>期望面试地点</p>
-          <span>*</span>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field v-model="list.qwmsdd" placeholder="请填写期望面试地点" />
-          </van-cell-group>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col :span="24">
-          <p>工作履历</p>
-        </van-col>
-        <van-col :span="24">
-          <van-cell-group>
-            <van-field
-              v-model="list.gzll"
-              autosize
-              type="textarea"
-              placeholder="请填写工作履历"
-            />
-          </van-cell-group>
-        </van-col>
-      </van-row>
-      <van-row>
-        <van-col :span="24">
-          <p>证件上传</p>
-        </van-col>
-        <van-col :span="24">
-          <van-uploader v-model="fileList" multiple />
         </van-col>
       </van-row>
       <van-row>
@@ -328,34 +354,77 @@ export default {
   data() {
     return {
       list: {
-        xm: "李凤化",
+        xm: "",
         xb: "男",
-        nn: "1",
-        sjh: "13906988092",
-        sfz: "350425199110112911",
-        csrq: "1990-11-11",
-        sg: "1",
-        tz: "1",
-        zysl: "1",
-        yysl: "1",
-        mz: "1",
-        xl: "1",
-        xz: "1",
-        zy: "1",
-        byyx: "1",
-        bysj: "1990-11-11",
-        jg: "1",
-        rtsj: "1990-11-11",
-        rdsj: "1990-11-11",
-        rwsj: "1990-11-11",
-        twsj: "1990-11-11",
-        xjttxdz: "1",
-        ypgw: "1",
-        qwmsdd: "1",
-        gzll: "1",
-        bz: "1"
+        wife: "是",
+        nn: "", //政治面貌
+        sjh: "",
+        sfz: "",
+        csrq: "",
+        sg: "",
+         tz: "全日制普通教育",
+         zysl: "",
+         yysl: "",
+        mz: "",
+        xl: "本科",
+        xz: "是",
+        zy: "",
+        byyx: "",
+        bysj: "",
+        jg: "",
+         rtsj: "",
+         rdsj: "",
+        rwsj: "",
+        twsj: "",
+        xjttxdz: "",
+         qwmsdd: "",
+         gzll: "",
+        bz: "",
+        cym:"",
+        csd:"",
+        xw:"学士",
+        ypgw:"学士",
+        xllx:"全日制普通教育"
       },
-      fileList: []
+      fileList: [],
+      showBysj: false,
+      showRwsj: false,
+      showTwsj: false,
+      showCsrq: false,
+      minDate: new Date(1920, 0, 1),
+      maxDate: new Date(2025, 11, 30),
+      currentDate: new Date(),
+      option1: [
+        { text: '全日制普通教育', value: '全日制普通教育' },
+        { text: '非全日制普通教育', value: '非全日制普通教育' },
+        { text: '电大', value: '电大' },
+        { text: '自考', value: '自考' },
+        { text: '函授', value: '函授' },
+        { text: '夜大', value: '夜大' },
+        { text: '在职研究生', value: '在职研究生' },
+        { text: '校企联办', value: '校企联办' },
+        { text: '网络教育', value: '网络教育' }
+      ],
+      option2: [
+        { text: '无', value: '无' },
+        { text: '学士', value: '学士' },
+        { text: '硕士', value: '硕士' },
+        { text: '博士', value: '博士' }
+      ],
+      option3: [
+        { text: '无', value: '无' },
+        { text: '小学', value: '小学' },
+        { text: '初中', value: '初中' },
+        { text: '高中', value: '高中' },
+        { text: '职高', value: '职高' },
+        { text: '技校', value: '技校' },
+        { text: '中专', value: '中专' },
+        { text: '大专', value: '大专' },
+        { text: '本科肄业', value: '本科肄业' },
+        { text: '本科', value: '本科' },
+        { text: '硕士研究生', value: '硕士研究生' },
+        { text: '博士研究生', value: '博士研究生' }
+      ],
     };
   },
   methods: {
@@ -367,6 +436,71 @@ export default {
     //   // console.log(data.getAll("img"))
     //   console.log(this.fileList[0].file)
     // },
+    showCs() {
+      this.showCsrq = true;
+    },
+    showBy() {
+      this.showBysj = true;
+    },
+    showRw() {
+      this.showRwsj = true;
+    },
+    showTw() {
+      this.showTwsj = true;
+    },
+    formatter(type, val) {
+      if (type === "year") {
+        return `${val}年`;
+      } else if (type === "month") {
+        return `${val}月`;
+      } else if (type === "day") {
+        return `${val}日`;
+      }
+
+      return val;
+    },
+    cancelCsrq() {
+      this.showCsrq = false;
+    },
+    cancelBysj() {
+      this.showBysj = false;
+    },
+    cancelRwsj() {
+      this.showRwsj = false;
+      this.list.rwsj = "";
+    },
+    cancelTwsj() {
+      this.showTwsj = false;
+      this.list.twsj = "";
+    },
+    p(s) {
+      return s < 10 ? "0" + s : s;
+    },
+    choiceCsrq(value) {
+      let month = this.p(value.getMonth() + 1);
+      let day = this.p(value.getDate());
+      this.list.csrq = value.getFullYear() + "-" + month + "-" + day;
+      console.log(this.list.csrq);
+      this.showCsrq = false;
+    },
+    choiceBysj(value) {
+      let month = this.p(value.getMonth() + 1);
+      this.list.bysj = value.getFullYear() + "-" + month;
+      console.log(this.list.bysj);
+      this.showBysj = false;
+    },
+    choiceRwsj(value) {
+      let month = this.p(value.getMonth() + 1);
+      this.list.rwsj = value.getFullYear() + "-" + month;
+      console.log(this.list.rwsj);
+      this.showRwsj = false;
+    },
+    choiceTwsj(value) {
+      let month = this.p(value.getMonth() + 1);
+      this.list.twsj = value.getFullYear() + "-" + month;
+      console.log(this.list.twsj);
+      this.showTwsj = false;
+    },
     dataURLtoFile(dataurl, filename) {
       // 将base64转换为file文件
       let arr = dataurl.split(",");
@@ -382,34 +516,45 @@ export default {
     tj() {
       if (
         this.list.xm != "" &&
+        //this.list.gzll != "" &&
+        //this.list.csd != "" &&
         this.list.nn != "" &&
         this.list.sjh != "" &&
         this.list.sfz != "" &&
         this.list.csrq != "" &&
         this.list.sg != "" &&
         this.list.tz != "" &&
-        this.list.zysl != "" &&
-        this.list.yysl != "" &&
+        //this.list.zysl != "" &&
+        //this.list.yysl != "" &&
         this.list.mz != "" &&
         this.list.xl != "" &&
+        //this.list.xllx != "" &&
+        //this.list.xw != "" &&
         this.list.byyx != "" &&
         this.list.bysj != "" &&
+        this.list.zy != "" &&
         this.list.jg != "" &&
+        //this.list.xz != "" &&
+        //this.list.rwsj != "" &&
+        //this.list.twsj != ""&&
         this.list.xjttxdz != "" &&
         this.list.ypgw != "" &&
         this.list.qwmsdd != ""
       ) {
-        if (this.list.nn < 0 || this.list.nn > 100) {
-          alert("请正确填写年龄");
-        } else if (this.list.sjh.length != 11) {
+        // if (this.list.nn < 0 || this.list.nn > 100) {
+        //   alert("请正确填写年龄");
+        // } else 
+        if (this.list.sjh.length != 11) {
           alert("请填写正确手机号");
         } else if (this.list.sfz.length != 18) {
           alert("请填写正确身份证");
         } else {
           let list = {
             p_xm: this.list.xm,
+            //p_cym: this.list.cym,
+            //p_csd: this.list.csd,
             p_xb: this.list.xb,
-            p_nn: this.list.nn,
+            p_nn: this.list.nn, //政治面貌
             p_sjh: this.list.sjh,
             p_sfz: this.list.sfz,
             p_csrq: this.list.csrq,
@@ -419,7 +564,9 @@ export default {
             p_yysl: this.list.yysl,
             p_mz: this.list.mz,
             p_xl: this.list.xl,
-            p_xz: this.list.xz,
+           // p_xllx: this.list.xllx,
+            //p_xw: this.list.xw,
+            p_xz: this.list.xz, //是否三钢子女
             p_zy: this.list.zy,
             p_byyx: this.list.byyx,
             p_bysj: this.list.bysj,
@@ -436,8 +583,11 @@ export default {
           };
           let test = { list: list, is_manager: "0" };
           sendMsg(test).then(rsp => {
+            console.log(rsp.data.p_message);
             if (rsp.data.p_message.includes("ORA")) {
-              alert("日期填写错误，请重新填写");
+              alert("日期格式填写错误，请重新填写");
+            } else if (rsp.data.p_message == "身份证已存在") {
+              alert("身份证已存在");
             } else if (rsp.data.p_message == "调用成功") {
               if (this.fileList.length == 0) {
                 alert("提交成功");

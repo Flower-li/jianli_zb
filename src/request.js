@@ -2,7 +2,7 @@ import Axios from "axios";
 import store from "./store";
 // import _ from 'lodash';
 let axios = Axios.create({
-  baseURL: "https://ehr.fjsg.com.cn/uat/zp",  
+  baseURL: "https://ehr.fjsg.com.cn/zp",
   // baseURL: "http://192.18.1.75:6600/ias/svc/hr/"
   // baseURL: "10.48.230.74:8092"
   timeout: 5000000
